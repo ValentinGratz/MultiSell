@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>MultiSell</title>
+  <style>
+    body { font-family: -apple-system, "Segoe UI", sans-serif; width: 260px; padding: 12px; background: #111827; color: #f9fafb; }
+    h1 { font-size: 15px; margin: 0 0 10px; }
+    .row { display: flex; justify-content: space-between; margin: 6px 0; font-size: 13px; color: #d1d5db; }
+    .row b { color: #fbbf24; }
+    button { width: 100%; margin-top: 8px; padding: 8px; border: 0; border-radius: 8px; font-weight: 600; cursor: pointer; background: #374151; color: #f9fafb; }
+    button.danger { background: #7f1d1d; }
+    #status { font-size: 11px; color: #9ca3af; margin-top: 8px; min-height: 14px; }
+  </style>
+</head>
+<body>
+  <h1>⚡ MultiSell</h1>
+  <div class="row">Annonces synchronisées <b id="count">-</b></div>
+  <div class="row">Exportées → Beebs <b id="count-beebs">-</b></div>
+  <div class="row">Exportées → Leboncoin <b id="count-leboncoin">-</b></div>
+  <div class="row">Stockage local <b id="usage">-</b></div>
+  <button id="exportBtn">Exporter en JSON</button>
+  <button id="clearBtn" class="danger">Vider IndexedDB</button>
+  <div id="status"></div>
+  <script src="popup.js"></script>
+</body>
+</html>

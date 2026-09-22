@@ -1,0 +1,78 @@
+#ms-panel {
+  position: fixed;
+  right: 12px;
+  top: 80px;
+  z-index: 999999;
+  background: #111827;
+  color: #f9fafb;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  padding: 12px;
+  width: 300px;
+  font-family: -apple-system, "Segoe UI", sans-serif;
+  font-size: 13px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+#ms-panel b { font-size: 14px; }
+#ms-panel .ms-line { margin: 6px 0; color: #d1d5db; }
+#ms-panel .ms-dest-btn {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px;
+  border: 0;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fbbf24;
+  color: #111827;
+}
+#ms-panel .ms-dest-btn[disabled] {
+  background: #22c55e;
+  color: #fff;
+  cursor: default;
+}
+#ms-panel .ms-diag { font-size: 11px; color: #9ca3af; margin-top: 8px; white-space: pre-wrap; }
+#ms-panel .ms-reset {
+  cursor: pointer;
+  color: #f87171;
+  margin-left: 6px;
+  font-size: 11px;
+}
+.ms-grid-badge, .ms-img-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 50;
+  background: #7c3aed;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  pointer-events: none;
+  font-family: sans-serif;
+  box-shadow: 0 1px 3px rgba(0,0,0,.3);
+}
+#ms-banner {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 999999;
+  background: #1a3a8f;
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: sans-serif;
+  max-width: 320px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+}
+#ms-banner button {
+  margin-left: 10px;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+}

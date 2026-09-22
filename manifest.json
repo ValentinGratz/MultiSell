@@ -1,0 +1,69 @@
+{
+  "manifest_version": 3,
+  "name": "MultiSell",
+  "version": "0.1.0",
+  "description": "Cross-listing modulaire Vinted / Beebs / Leboncoin : extraction, préparation, préremplissage — validation humaine avant publication.",
+  "permissions": ["storage", "unlimitedStorage"],
+  "host_permissions": [
+    "https://*.vinted.fr/*",
+    "https://*.vinted.com/*",
+    "https://*.vinted.net/*",
+    "https://*.beebs.app/*",
+    "https://*.leboncoin.fr/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.vinted.fr/*", "https://*.vinted.com/*", "https://*.vinted.net/*"],
+      "css": ["multisell.css"],
+      "js": [
+        "core/dom-observer.js",
+        "core/form.js",
+        "core/badges.js",
+        "core/listing.js",
+        "core/router.js",
+        "core/diagnostics.js",
+        "platforms/vinted/extractor.js",
+        "platforms/vinted/grid.js",
+        "platforms/vinted/platform.js",
+        "content-vinted.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://*.beebs.app/*"],
+      "css": ["multisell.css"],
+      "js": [
+        "core/dom-observer.js",
+        "core/form.js",
+        "core/listing.js",
+        "core/router.js",
+        "core/diagnostics.js",
+        "platforms/beebs/form.js",
+        "platforms/beebs/platform.js",
+        "content-beebs.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://*.leboncoin.fr/deposer-une-annonce*"],
+      "css": ["multisell.css"],
+      "js": [
+        "core/dom-observer.js",
+        "core/form.js",
+        "core/listing.js",
+        "core/router.js",
+        "core/diagnostics.js",
+        "platforms/leboncoin/form.js",
+        "platforms/leboncoin/platform.js",
+        "content-leboncoin.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

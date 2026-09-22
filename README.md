@@ -1,220 +1,56 @@
-# MultiSell
+# MultiSell (v0.1.0)
 
-**MultiSell** est une extension Chrome destinée à faciliter le cross-listing d'annonces entre différentes plateformes de vente en ligne.
+Extension Chrome de cross-listing modulaire. Extrait une annonce Vinted et
+prépare son transfert vers Beebs et/ou Leboncoin : préremplissage des
+formulaires, **jamais de publication automatique**.
 
-L'objectif est de permettre à l'utilisateur de partir d'une annonce existante sur une plateforme et de préparer rapidement sa publication sur une autre.
+Ce projet est **indépendant** de `vinted2beebs` et `vinted2leboncoin-` : les
+deux extensions d'origine restent installées et inchangées. MultiSell en est
+inspiré (audit détaillé fait au préalable) mais réécrit dans une architecture
+CORE + adaptateurs par plateforme.
 
-## 🚧 Projet en développement
+## Installation (mode développeur)
 
-Le projet est actuellement au stade de conception.
+1. `chrome://extensions`
+2. Activer "Mode développeur"
+3. "Charger l'extension non empaquetée" → sélectionner le dossier `multisell/`
 
-Il reprend notamment les bases de deux extensions existantes :
+## Portée de cette version (phases 1 à 4 du plan)
 
-* Vinted → Beebs
-* Vinted → Leboncoin
+- ✅ CORE : storage IndexedDB, fetch photos CORS, remplissage de formulaire
+  React-aware, badges de grille, diagnostics
+- ✅ Vinted : extraction fiche produit (JSON-LD + fallback DOM) + scraping des
+  grilles (dressing/favoris/recherche)
+- ✅ Vinted → Beebs : préremplissage titre/description/prix/photos
+- ✅ Vinted → Leboncoin : préremplissage progressif du wizard multi-étapes
+- ⛔ Opla : **non implémenté**. Le brief demande explicitement d'étudier la
+  plateforme avant tout code (phase 8) — site officiel, structure du
+  formulaire, faisabilité d'injection de fichiers. Rien n'a été supposé.
+- ⛔ Shopify : **non implémenté**. Cas différent (API + OAuth, pas de scraping
+  DOM) — phase 9 du plan, nécessite une architecture propre (module API
+  séparé, jamais de mot de passe demandé).
+- ⚠️ `core/categories.js` : table de correspondance **vide**. Aucun mapping de
+  catégorie n'a été supposé — le module transporte la catégorie source telle
+  quelle et la marque `verified: false` tant qu'un vrai tableau de
+  correspondance n'a pas été construit avec des exemples réels.
 
-L'objectif est progressivement de réunir ces fonctionnalités dans une seule extension modulaire.
+## Ce qui n'a pas encore été testé en conditions réelles
 
-## 🎯 Objectif
+Le code reprend et fusionne les techniques déjà validées dans
+`vinted2beebs` et `vinted2leboncoin-` (sélecteurs, extraction JSON-LD,
+remplissage React), mais n'a pas encore tourné sur les sites réels. À
+vérifier en priorité à l'installation :
 
-À terme, MultiSell pourra interconnecter plusieurs plateformes :
+- Les sélecteurs CSS Vinted/Beebs/Leboncoin peuvent avoir changé depuis
+  l'audit (fait sur le code des deux extensions, pas sur les sites en
+  direct)
+- Le panneau MultiSell peut se superposer visuellement à l'UI des deux
+  anciennes extensions si elles sont actives sur la même page — c'est prévu
+  (Beebs détectait déjà Leboncoin dans son propre code), mais pas re-testé
+  avec ce nouveau panneau
 
-* Vinted
-* Beebs
-* Leboncoin
-* Opla
-* Shopify
-* et potentiellement d'autres plateformes
+## Prochaine étape suggérée
 
-Le principe :
-
-```text
-                 ┌──→ Vinted
-                 │
-                 ├──→ Beebs
-Annonce ─────────┼──→ Leboncoin
-                 │
-                 ├──→ Opla
-                 │
-                 └──→ Shopify
-```
-
-L'utilisateur pourra récupérer les informations d'une annonce existante puis choisir vers quelle plateforme il souhaite la préparer.
-
-## 📦 Informations pouvant être récupérées
-
-Selon les possibilités offertes par chaque plateforme :
-
-* Photos
-* Titre
-* Description
-* Prix
-* Catégorie
-* Marque
-* Taille
-* État
-* Couleur
-* Matière
-* Genre
-* URL de l'annonce
-* Identifiant de l'annonce
-* autres informations disponibles
-
-Toutes les plateformes ne proposent pas les mêmes champs. MultiSell devra donc utiliser un modèle de données commun tout en conservant les spécificités de chaque plateforme.
-
-## 🔄 Principe de fonctionnement
-
-```text
-Annonce existante
-       ↓
-Détection de la plateforme
-       ↓
-Extraction des informations
-       ↓
-Stockage temporaire
-       ↓
-Choix de la plateforme destination
-       ↓
-Adaptation des informations
-       ↓
-Préremplissage de l'annonce
-       ↓
-Vérification par l'utilisateur
-       ↓
-Publication manuelle
-```
-
-MultiSell est conçu comme un **assistant de cross-listing**.
-
-L'objectif n'est pas de créer un bot autonome publiant massivement des annonces à la place de l'utilisateur.
-
-## 🧩 Architecture envisagée
-
-Chaque plateforme devra fonctionner comme un module indépendant.
-
-Exemple :
-
-```text
-src/
-├── core/
-│   ├── listing.js
-│   ├── storage.js
-│   ├── images.js
-│   └── router.js
-│
-├── platforms/
-│   ├── vinted/
-│   ├── beebs/
-│   ├── leboncoin/
-│   ├── opla/
-│   └── shopify/
-│
-├── background.js
-├── content.js
-└── popup.html
-```
-
-Cette architecture pourra être modifiée si une meilleure solution est identifiée pendant l'analyse technique.
-
-## 🏗️ Plateformes
-
-### Vinted
-
-Base existante provenant du projet `vinted2beebs` et des travaux `vinted2leboncoin`.
-
-### Beebs
-
-Extraction et préparation des annonces Beebs vers les autres plateformes.
-
-### Leboncoin
-
-Extraction et préparation des annonces Leboncoin vers les autres plateformes.
-
-### Opla
-
-Intégration à étudier.
-
-Aucune intégration ne sera ajoutée sans vérifier au préalable les possibilités techniques réelles du site.
-
-### Shopify
-
-Cas particulier.
-
-Shopify n'est pas une marketplace de petites annonces classique. Une éventuelle intégration devra plutôt permettre de transformer une annonce en fiche produit Shopify.
-
-L'authentification et les API Shopify devront être étudiées séparément.
-
-## 🔐 Sécurité
-
-MultiSell ne doit pas :
-
-* demander les mots de passe des utilisateurs ;
-* contourner les CAPTCHA ;
-* contourner les systèmes anti-bot ;
-* contourner les restrictions d'accès ;
-* publier massivement des annonces automatiquement ;
-* effectuer des actions importantes sans validation de l'utilisateur.
-
-L'utilisateur doit conserver le contrôle de la publication finale.
-
-## 🐛 Diagnostic
-
-Le projet devra disposer d'un système de diagnostic permettant d'identifier rapidement les problèmes d'intégration.
-
-Exemple :
-
-```text
-MultiSell Diagnostic
-
-Platform: Vinted
-Page type: Listing
-
-Title: ✓
-Description: ✓
-Price: ✓
-Photos: 8
-Brand: ✓
-Category: ✓
-
-Destination: Leboncoin
-
-Form detected: ✓
-Title field: ✓
-Description field: ✓
-Price field: ✓
-Photo upload: ✓
-```
-
-Cela permettra notamment de diagnostiquer rapidement les changements d'interface d'une plateforme.
-
-## 📚 Projets d'origine
-
-MultiSell reprend notamment les travaux réalisés dans :
-
-* `vinted2beebs`
-* `vinted2leboncoin`
-
-Les anciens projets resteront indépendants afin de conserver des versions fonctionnelles de référence.
-
-## 🗺️ Roadmap
-
-* [ ] Analyse des extensions existantes
-* [ ] Définition de l'architecture MultiSell
-* [ ] Modèle de données universel
-* [ ] Module Vinted
-* [ ] Module Beebs
-* [ ] Module Leboncoin
-* [ ] Beebs → Vinted
-* [ ] Leboncoin → Vinted
-* [ ] Système de mapping des catégories
-* [ ] Système de diagnostic
-* [ ] Interface MultiSell
-* [ ] Étude Opla
-* [ ] Étude Shopify
-* [ ] Ajout éventuel d'autres plateformes
-
-## ⚠️ Statut
-
-**Prototype / développement initial**
-
-MultiSell n'est pas encore une extension Chrome prête à l'emploi.
+Tester Phase 3 (Vinted→Beebs) et Phase 4 (Vinted→Leboncoin) sur des annonces
+réelles, en parallèle des deux extensions existantes, avant d'envisager la
+Phase 5 (bidirectionnel).
